@@ -12,14 +12,15 @@ object LinearRegression02 {
     val conf = new SparkConf()
     conf.setMaster("local")
 
-    val spark = SparkSession.builder().config(conf).appName("LinearRegression").getOrCreate()
+    val spark = SparkSession.builder().config(conf).appName("LinearRegression").getOrCreate() //创建环境变量实例
 
-    var data = spark.read.format("libsvm")
-      .load("data/sample_linear_regression_data.txt")
+    var data = spark.read.format("libsvm") //读取libsvm格式的数据
+      .load("data/sample_linear_regression_data.txt") //加载数据
 
    //增加一列与第一个特征一模一样 -0.294192922737251,-0.294192922737251
-    //未增加：   -0.5883852628595317
+   //未增加：   -0.5883852628595317
 
+    // w代表影响因子，越大越重要
 
     /**
       *randomSplit 是随机切割的方法  Array(0.8,0.2)
@@ -40,12 +41,12 @@ object LinearRegression02 {
       *  2、第二份做测试集
       */
 
-    val DFS = data.randomSplit(Array(0.8,0.2),1)
+    val DFS = data.randomSplit(Array(0.8,0.2),1) //1代表随机种子, 0.8代表训练集占比,0.2代表测试集占比, dfs 代表dataframe的数组
 
-    val (training,test) = (DFS(0),DFS(1))
+    val (training,test) = (DFS(0),DFS(1)) //训练集和测试集
 
     val lr = new LinearRegression()
-      .setMaxIter(10)
+      .setMaxIter(10) //最大迭代次数
       //L1+L2系数之和    0代表不使用正则化
 //      .setRegParam(0.3)
     /**
@@ -58,7 +59,7 @@ object LinearRegression02 {
 
 
     // Fit the model
-    val lrModel = lr.fit(training)
+    val lrModel = lr.fit(training) //训练模型
 
     // 打印模型参数w1...wn和截距w0
     println(s"Coefficients: ${lrModel.coefficients} Intercept: ${lrModel.intercept}")

@@ -51,7 +51,7 @@ if __name__ == '__main__':
     corpus_test = []
     # labels_test测试集中邮件的标签
     labels_test = []
-    f = open('../../../data/sms_spam.txt', mode='r', encoding='utf-8')
+    f = open('../data/sms_spam.txt', mode='r', encoding='utf-8')
     index = 0
     while True:
         line = f.readline()

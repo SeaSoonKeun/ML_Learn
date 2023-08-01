@@ -7,6 +7,7 @@ import org.apache.spark.sql.SparkSession
 
 import scala.util.Random
 
+// spark mllib 应用于多元线性回归
 
 object LinearRegression03 {
   //0.5395881831013476
@@ -24,12 +25,12 @@ object LinearRegression03 {
    //增加一列与第一个特征一模一样 -0.294192922737251,-0.294192922737251
     //未增加：   -0.5883852628595317
     import spark.implicits._
-    data = data.rdd.map(row=>{
-      val features = row.getAs[SparseVector]("features")
-      val label = row.getAs[Double]("label")
-      val featureArr = features.toDense.toArray
-      (label,new DenseVector(featureArr.+:(1.0)))
-    }).toDF("label","features")
+    data = data.rdd.map(row=>{  //转换成RDD，方便操作
+      val features = row.getAs[SparseVector]("features") //稀疏向量
+      val label = row.getAs[Double]("label")        //标签
+      val featureArr = features.toDense.toArray    //稠密向量
+      (label,new DenseVector(featureArr.+:(1.0)))   //增加一列，都是1.0，无关的列（噪声数据、脏数据），影响权重为0
+    }).toDF("label","features")  //转换成DF
 
     data.show(10,false)
     val DFS = data.randomSplit(Array(0.8,0.2),1)
